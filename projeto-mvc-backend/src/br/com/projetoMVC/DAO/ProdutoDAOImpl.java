@@ -11,12 +11,12 @@ import br.com.projetoMVC.model.Produto;
 import br.com.projetoMVC.util.ConnectionFactory;
 
 public class ProdutoDAOImpl implements GenericDAO {
-	
+
 	private Connection conn;
-	
-	// Construtor vazio da classe ProdutoDAOImpl, iniciando a conexão com o banco 
+
+	// Construtor vazio da classe ProdutoDAOImpl, iniciando a conexão com o banco
 	// de dados através da classe ConnectionFactory
-	public ProdutoDAOImpl () throws Exception {
+	public ProdutoDAOImpl() throws Exception {
 		try {
 			this.conn = ConnectionFactory.getConnection();
 		} catch (Exception e) {
@@ -31,34 +31,62 @@ public class ProdutoDAOImpl implements GenericDAO {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT * FROM produto";
-		
+
 		try {
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				Produto produto = new Produto();
 				produto.setId(rs.getInt("id"));
 				produto.setDescricao(rs.getString("descricao"));
 				lista.add(produto);
 			}
-		} catch(SQLException ex) {
+		} catch (SQLException ex) {
 			System.out.println("Problemas na DAO ao listar Produto! " + ex.getMessage());
 			ex.printStackTrace();
 		} finally {
 			try {
 				ConnectionFactory.closeConnection(conn, stmt, rs);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				System.out.println("Problemas na DAO ao fechar conexão! " + e.getMessage());
 			}
 		}
-		
+
 		return lista;
 	}
 
 	@Override
 	public Object listarPorId(int id) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Produto produto = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM produto WHERE id = ?";
+
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				produto = new Produto();
+				produto.setId(rs.getInt("id"));
+				produto.setDescricao(rs.getString("descricao"));
+			}
+
+		} catch (SQLException ex) {
+			System.out.println("Problemas na DAO ao listar Produto por id! " + ex.getMessage());
+			ex.printStackTrace();
+		} finally {
+			try {
+				ConnectionFactory.closeConnection(conn, stmt, rs);
+			} catch (Exception e) {
+				System.out.println("Problemas na DAO ao fechar conexão! " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return produto;
 	}
 
 	@Override
@@ -76,7 +104,7 @@ public class ProdutoDAOImpl implements GenericDAO {
 	@Override
 	public void excluir(int id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
