@@ -19,7 +19,6 @@ public class ProdutoDAOImpl implements GenericDAO {
 	public ProdutoDAOImpl () throws Exception {
 		try {
 			this.conn = ConnectionFactory.getConnection();
-			System.out.println("ProdutoDAOImpl: Conectado com sucesso!");
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -27,11 +26,11 @@ public class ProdutoDAOImpl implements GenericDAO {
 
 	@Override
 	public List<Object> listarTodos() {
-		
+
 		List<Object> lista = new ArrayList<Object>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM PRODUTO";
+		String sql = "SELECT * FROM produto";
 		
 		try {
 			stmt = conn.prepareStatement(sql);
